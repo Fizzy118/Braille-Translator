@@ -16,7 +16,7 @@ import org.opencv.core.Core;
  * 
  * @author Zuzanna Adamiuk & Piotr Kielak
  */
-public class Class1 {
+public class brailleMain {
 
     /**
      * 
