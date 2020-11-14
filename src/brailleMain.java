@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -21,7 +22,28 @@ public class brailleMain {
     /**
      * 
      * @param args the command line arguments
-     */
+     */  
+    
+//image edition method
+        static void image_edition(Mat img_Gray, Mat image)
+        {
+            System.out.println("The edition has started! I'm currently editing the image...");
+            //Grayscale
+            Imgproc.cvtColor(image, img_Gray, Imgproc.COLOR_BGR2GRAY);
+
+            //Gaussian Filter
+            Imgproc.GaussianBlur(img_Gray, img_Gray, new Size(3,3), 0);
+            Imgproc.adaptiveThreshold(img_Gray, img_Gray, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY_INV, 5, 5);
+            // Median Filter
+            Imgproc.medianBlur(img_Gray, img_Gray, 3);
+            Imgproc.threshold(img_Gray, img_Gray, 0, 255, Imgproc.THRESH_OTSU); 
+            //Gaussian Filter
+            Imgproc.GaussianBlur(img_Gray, img_Gray, new Size(3, 3), 0);
+            Imgproc.threshold(img_Gray, img_Gray, 0, 255, Imgproc.THRESH_OTSU);
+            //imagie edition message
+            System.out.println("The editing is complete!");
+        }
+        
     public static void main(String[] args) {
         
         String sourcePath = "D:/obrazek.jpg";
@@ -37,21 +59,8 @@ public class brailleMain {
         Mat imgGray = new Mat();
         Mat image = Imgcodecs.imread(sourcePath, 1);  
 
-        System.out.println("The edition has started! I'm currently editing the image...");
-        
-        //Grayscale
-        Imgproc.cvtColor(image, imgGray, Imgproc.COLOR_BGR2GRAY);
-
-        //Gaussian Filter
-        Imgproc.GaussianBlur(imgGray, imgGray, new Size(3,3), 0);
-        Imgproc.adaptiveThreshold(imgGray, imgGray, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY_INV, 5, 5);
-        // Median Filter
-        Imgproc.medianBlur(imgGray, imgGray, 3);
-        Imgproc.threshold(imgGray, imgGray, 0, 255, Imgproc.THRESH_OTSU); 
-        //Gaussian Filter
-        Imgproc.GaussianBlur(imgGray, imgGray, new Size(3, 3), 0);
-        Imgproc.threshold(imgGray, imgGray, 0, 255, Imgproc.THRESH_OTSU);
-      
+        //Function call
+        image_edition(imgGray, image);
         //Saving edited image
         Imgcodecs.imwrite(destinationPath,imgGray );
         
@@ -59,5 +68,4 @@ public class brailleMain {
         System.out.println("The photo was succesfully edited and saved to a new file! \nPath to the edited photo: " + destinationPath);
        
     }
-    
 }
