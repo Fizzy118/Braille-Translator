@@ -10,6 +10,11 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.core.Core;
 
+//package com.devdaily.imagetests;
+import java.io.File; 
+import java.io.IOException; 
+import java.awt.image.BufferedImage; 
+import javax.imageio.ImageIO;
 /**
  * Braille Translator is a console application that allows user to translate Braille alphabate to traditional English alphabet. 
  * User needs to prepare a sharp image of a text written in Braille and to provide information about a path to the file. 
@@ -43,8 +48,15 @@ public class brailleMain {
             //imagie edition message
             System.out.println("The editing is complete!");
         }
-        
-    public static void main(String[] args) {
+        static void hw_stats(BufferedImage edited_image)
+        {
+            int w = edited_image.getWidth();
+            int h = edited_image.getHeight();
+           
+            
+        }
+    public static void main(String[] args)throws IOException
+    {
         
         String sourcePath = "D:/obrazek.jpg";
         String destinationPath = "D:/obrazek-edited.jpg";
@@ -58,14 +70,26 @@ public class brailleMain {
         // Preparing matrix for changing an image
         Mat imgGray = new Mat();
         Mat image = Imgcodecs.imread(sourcePath, 1);  
-
+       
         //Function call
         image_edition(imgGray, image);
+        
         //Saving edited image
         Imgcodecs.imwrite(destinationPath,imgGray );
         
         // Successful operation message
         System.out.println("The photo was succesfully edited and saved to a new file! \nPath to the edited photo: " + destinationPath);
+        
+        // Preparing for importing data from an imagie
+        BufferedImage img_ae = null; 
+        File f = null;
+        f = new File(destinationPath); 
+        img_ae = ImageIO.read(f); 
+       
+        //Function call
+        hw_stats(img_ae);
+        
+        
        
     }
 }
