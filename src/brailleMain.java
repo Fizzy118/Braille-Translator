@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException; 
 import java.awt.image.BufferedImage; 
 import javax.imageio.ImageIO;
+
 /**
  * Braille Translator is a console application that allows user to translate Braille alphabate to traditional English alphabet. 
  * User needs to prepare a sharp image of a text written in Braille and to provide information about a path to the file. 
@@ -28,10 +29,40 @@ public class brailleMain {
      * 
      * @param args the command line arguments
      */  
+
+    public static void main(String[] args)throws IOException{
+        String sourcePath = "D:/obrazek.jpg";
+        String destinationPath = "D:/obrazek-edited.jpg";
+        
+        // Welcome message
+        System.out.println("Welcome to Braille Translator! \nPath to the chosen photo: " + sourcePath);
+            
+        // Loading the OpenCV native library
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        
+        // Preparing matrix for changing an image
+        Mat imgEdited = new Mat();
+        Mat image = Imgcodecs.imread(sourcePath, 1);  
+
+        double w,h;
+        w = image.size().width;
+        h = image.size().height;
+        System.out.println("Image size: \nWidth: " + w + "px\nHeight: " + h +"px");
     
-//image edition method
-        static void image_edition(Mat img_Gray, Mat image)
-        {
+        //Function call
+        image_edition(imgEdited, image);
+        
+        //Saving edited image
+        Imgcodecs.imwrite(destinationPath,imgEdited );
+        // Successful operation message
+        System.out.println("The photo was succesfully edited and saved to a new file! \nPath to the edited photo: " + destinationPath);
+        
+
+    }
+    
+        // METHODS
+        //image edition method
+        static void image_edition(Mat img_Gray, Mat image) {
             System.out.println("The edition has started! I'm currently editing the image...");
             //Grayscale
             Imgproc.cvtColor(image, img_Gray, Imgproc.COLOR_BGR2GRAY);
@@ -48,48 +79,4 @@ public class brailleMain {
             //imagie edition message
             System.out.println("The editing is complete!");
         }
-        static void hw_stats(BufferedImage edited_image)
-        {
-            int w = edited_image.getWidth();
-            int h = edited_image.getHeight();
-           
-            
-        }
-    public static void main(String[] args)throws IOException
-    {
-        
-        String sourcePath = "D:/obrazek.jpg";
-        String destinationPath = "D:/obrazek-edited.jpg";
-        
-        // Welcome message
-        System.out.println("Welcome to Braille Translator! \nPath to the chosen photo: " + sourcePath);
-        
-        // Loading the OpenCV native library
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        
-        // Preparing matrix for changing an image
-        Mat imgGray = new Mat();
-        Mat image = Imgcodecs.imread(sourcePath, 1);  
-       
-        //Function call
-        image_edition(imgGray, image);
-        
-        //Saving edited image
-        Imgcodecs.imwrite(destinationPath,imgGray );
-        
-        // Successful operation message
-        System.out.println("The photo was succesfully edited and saved to a new file! \nPath to the edited photo: " + destinationPath);
-        
-        // Preparing for importing data from an imagie
-        BufferedImage img_ae = null; 
-        File f = null;
-        f = new File(destinationPath); 
-        img_ae = ImageIO.read(f); 
-       
-        //Function call
-        hw_stats(img_ae);
-        
-        
-       
-    }
 }
