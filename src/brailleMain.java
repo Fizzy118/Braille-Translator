@@ -9,12 +9,12 @@ import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.core.Core;
-
-//package com.devdaily.imagetests;
-import java.io.File; 
 import java.io.IOException; 
-import java.awt.image.BufferedImage; 
-import javax.imageio.ImageIO;
+
+import App_gui.App_interface;
+//import App_gui.information;
+import javax.swing.SwingUtilities;
+
 
 /**
  * Braille Translator is a console application that allows user to translate Braille alphabate to traditional English alphabet. 
@@ -57,7 +57,17 @@ public class brailleMain {
         // Successful operation message
         System.out.println("The photo was succesfully edited and saved to a new file! \nPath to the edited photo: " + destinationPath);
         
-
+        //initiating interface
+        Runnable thread=new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                App_interface app = new App_interface();
+                app.setVisible(true);
+            }
+        };
+        SwingUtilities.invokeLater(thread);
     }
     
         // METHODS
