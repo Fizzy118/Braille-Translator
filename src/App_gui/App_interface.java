@@ -37,7 +37,7 @@ public class App_interface extends JFrame
     
      
     //label initiation
-    JLabel label=new JLabel("Choose imagie with Braille language:");
+    JLabel label=new JLabel("Choose image with text written in Braille:");
     mainPanel.add(label);
 
     //file chooser initiation
