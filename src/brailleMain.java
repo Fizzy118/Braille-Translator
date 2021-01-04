@@ -11,7 +11,11 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.core.Core;
 import java.io.IOException;
 
+<<<<<<< HEAD
 import Dictionary.Letters;
+=======
+
+>>>>>>> 66788d5fcb6f30043995bd85d84ec514c7b11ed1
 import App_gui.App_interface;
 import javax.swing.SwingUtilities;
 import java.awt.event.*; 
@@ -23,6 +27,11 @@ import org.opencv.highgui.HighGui;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 66788d5fcb6f30043995bd85d84ec514c7b11ed1
 /**
  * Braille Translator is a console application that allows user to translate Braille alphabate to traditional English alphabet. 
  * User needs to prepare a sharp image of a text written in Braille and to provide information about a path to the file. 
@@ -30,7 +39,7 @@ import java.awt.image.BufferedImage;
  * 
  * @author Zuzanna Adamiuk & Piotr Kielak
  */
-public class brailleMain {
+public class brailleMain{
 
     /**
      * 
@@ -38,6 +47,7 @@ public class brailleMain {
      */  
 
     public static void main(String[] args)throws IOException{ 
+<<<<<<< HEAD
         //initiating interface
     
  
@@ -51,6 +61,24 @@ public class brailleMain {
         }
         while(sourcePath==null);
         
+=======
+//        //initiating interface
+//       Runnable thread=new Runnable()
+//       {
+//           @Override
+//           public void run()
+//           {
+//                App_interface app = new App_interface();
+//                app.setVisible(true);
+//           }
+//       };
+//        SwingUtilities.invokeLater(thread);
+
+//        App_interface app = new App_interface();
+//        String sourcePath =app.getpath();
+        
+        String sourcePath = "D:/obrazek.jpg";
+>>>>>>> 66788d5fcb6f30043995bd85d84ec514c7b11ed1
         String destinationPath = "D:/obrazek-edited.jpg";
         
         // Welcome message
@@ -70,6 +98,12 @@ public class brailleMain {
     
         //Function call
         image_edition(imgEdited, image);
+<<<<<<< HEAD
+=======
+        
+        
+        
+>>>>>>> 66788d5fcb6f30043995bd85d84ec514c7b11ed1
         //TESTOWANIE OKREGOW
         
         int circleCounter = 0;
@@ -118,12 +152,24 @@ public class brailleMain {
 
         // KONIEC TESTOWANIA
         
+<<<<<<< HEAD
         //Saving edited image
         Imgcodecs.imwrite(destinationPath,imgEdited );
         // Successful operation message
         System.out.println("The photo was succesfully edited and saved to a new file! \nPath to the edited photo: " + destinationPath);
            
        
+=======
+        
+
+        //Saving edited image
+        Imgcodecs.imwrite(destinationPath,imgEdited );
+        
+        // Successful operation message
+        System.out.println("The photo was succesfully edited and saved to a new file! \nPath to the edited photo: " + destinationPath);
+        System.exit(0);
+
+>>>>>>> 66788d5fcb6f30043995bd85d84ec514c7b11ed1
     }
     
         // METHODS
@@ -144,5 +190,11 @@ public class brailleMain {
             Imgproc.threshold(img_Gray, img_Gray, 0, 255, Imgproc.THRESH_OTSU);
             //imagie edition message
             System.out.println("The editing is complete!");
+<<<<<<< HEAD
         }  
+=======
+        }   
+       
+
+>>>>>>> 66788d5fcb6f30043995bd85d84ec514c7b11ed1
 }
