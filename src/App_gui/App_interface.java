@@ -48,40 +48,15 @@ public class App_interface extends JFrame
     FileNameExtensionFilter filter = new FileNameExtensionFilter("PNG and JPG images", "png", "jpg");
     fc.addChoosableFileFilter(filter);
     
-    ActionListener action2 = new ActionListener() {
-        
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            File selectedFile = fc.getSelectedFile();
-            path=selectedFile.getAbsolutePath();
-            String destinationPath = "D:/obrazek-edited.jpg";
-        
-        // Welcome message
-        System.out.println("Welcome to Braille Translator! \nPath to the chosen photo: " + path);
-            
-        // Loading the OpenCV native library
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        
-        // Preparing matrix for changing an image
-        Mat imgEdited = new Mat();
-        Mat image = Imgcodecs.imread(path, 1);  
-
-        double w,h;
-        w = image.size().width;
-        h = image.size().height;
-        System.out.println("Image size: \nWidth: " + w + "px\nHeight: " + h +"px");
-    
-        //Function call
-        image_edition(imgEdited, image);
-        
-        //Saving edited image
-        Imgcodecs.imwrite(destinationPath,imgEdited );
-        // Successful operation message
-        System.out.println("The photo was succesfully edited and saved to a new file! \nPath to the edited photo: " + destinationPath);
-        
+   ActionListener action2 = new ActionListener() {       
        
-            JOptionPane.showMessageDialog(null,"The image has been selected");
-        }};
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            File file = fc.getSelectedFile();
+            path = file.getAbsolutePath();
+        }
+   };
     fc.addActionListener(action2);
     
     
@@ -134,21 +109,21 @@ public class App_interface extends JFrame
    {
    return path;
    }
-   static void image_edition(Mat img_Gray, Mat image) {
-            System.out.println("The edition has started! I'm currently editing the image...");
-            //Grayscale
-            Imgproc.cvtColor(image, img_Gray, Imgproc.COLOR_BGR2GRAY);
-
-            //Gaussian Filter
-            Imgproc.GaussianBlur(img_Gray, img_Gray, new Size(3,3), 0);
-            Imgproc.adaptiveThreshold(img_Gray, img_Gray, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY_INV, 5, 5);
-            // Median Filter
-            Imgproc.medianBlur(img_Gray, img_Gray, 3);
-            Imgproc.threshold(img_Gray, img_Gray, 0, 255, Imgproc.THRESH_OTSU); 
-            //Gaussian Filter
-            Imgproc.GaussianBlur(img_Gray, img_Gray, new Size(3, 3), 0);
-            Imgproc.threshold(img_Gray, img_Gray, 0, 255, Imgproc.THRESH_OTSU);
-            //imagie edition message
-            System.out.println("The editing is complete!");
-        }
+//   static void image_edition(Mat img_Gray, Mat image) {
+//            System.out.println("The edition has started! I'm currently editing the image...");
+//            //Grayscale
+//            Imgproc.cvtColor(image, img_Gray, Imgproc.COLOR_BGR2GRAY);
+//
+//            //Gaussian Filter
+//            Imgproc.GaussianBlur(img_Gray, img_Gray, new Size(3,3), 0);
+//            Imgproc.adaptiveThreshold(img_Gray, img_Gray, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY_INV, 5, 5);
+//            // Median Filter
+//            Imgproc.medianBlur(img_Gray, img_Gray, 3);
+//            Imgproc.threshold(img_Gray, img_Gray, 0, 255, Imgproc.THRESH_OTSU); 
+//            //Gaussian Filter
+//            Imgproc.GaussianBlur(img_Gray, img_Gray, new Size(3, 3), 0);
+//            Imgproc.threshold(img_Gray, img_Gray, 0, 255, Imgproc.THRESH_OTSU);
+//            //imagie edition message
+//            System.out.println("The editing is complete!");
+//        }
 }
