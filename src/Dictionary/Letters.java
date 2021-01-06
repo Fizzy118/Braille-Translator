@@ -69,5 +69,5 @@ public class Letters {
     //public String[] dcaps={"000001",""};
     //public String[] dletter={"000101",""};
     public String[] dspace={"000000"," "};
-    public String[] dcomma={"000000",","};
+    //public String[] dcomma={"000000",","};
 }

@@ -11,11 +11,8 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.core.Core;
 import java.io.IOException;
 
-<<<<<<< HEAD
 import Dictionary.Letters;
-=======
 
->>>>>>> 66788d5fcb6f30043995bd85d84ec514c7b11ed1
 import App_gui.App_interface;
 import javax.swing.SwingUtilities;
 import java.awt.event.*; 
@@ -27,11 +24,7 @@ import org.opencv.highgui.HighGui;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
-<<<<<<< HEAD
-=======
 
-
->>>>>>> 66788d5fcb6f30043995bd85d84ec514c7b11ed1
 /**
  * Braille Translator is a console application that allows user to translate Braille alphabate to traditional English alphabet. 
  * User needs to prepare a sharp image of a text written in Braille and to provide information about a path to the file. 
@@ -47,21 +40,19 @@ public class brailleMain{
      */  
 
     public static void main(String[] args)throws IOException{ 
-<<<<<<< HEAD
         //initiating interface
     
  
-               App_interface app = new App_interface();
-               app.setVisible(true);
+        App_interface app = new App_interface();
+        app.setVisible(true);
  
         String sourcePath;
         do{
         sourcePath =app.getpath();
-        System.out.println(".");  //czemu bez tego nie działa XD
+        System.out.print("");  //czemu bez tego nie działa?
         }
         while(sourcePath==null);
-        
-=======
+
 //        //initiating interface
 //       Runnable thread=new Runnable()
 //       {
@@ -77,8 +68,9 @@ public class brailleMain{
 //        App_interface app = new App_interface();
 //        String sourcePath =app.getpath();
         
-        String sourcePath = "D:/obrazek.jpg";
->>>>>>> 66788d5fcb6f30043995bd85d84ec514c7b11ed1
+//        String sourcePath = "D:/obrazek.jpg";
+//>>>>>>> 66788d5fcb6f30043995bd85d84ec514c7b11ed1
+
         String destinationPath = "D:/obrazek-edited.jpg";
         
         // Welcome message
@@ -98,17 +90,10 @@ public class brailleMain{
     
         //Function call
         image_edition(imgEdited, image);
-<<<<<<< HEAD
-=======
-        
-        
-        
->>>>>>> 66788d5fcb6f30043995bd85d84ec514c7b11ed1
-        //TESTOWANIE OKREGOW
-        
+   
         int circleCounter = 0;
         int radiusSum = 0;
-        double meanDiameter, oneCharacterWithSpace,oneCharacterWithNewLine, numberOfColumns, numberOfRows, lineSpace, rowSpace, numberOfCharacters;
+        double meanDiameter, oneCharacterWithSpace,oneCharacterWithNewLine, numberOfColumns, numberOfRows, lineSpace, rowSpace, numberOfCharacters, dotSize, dotSpace;
        
         Mat circles = new Mat();
         Imgproc.HoughCircles(imgEdited, circles, Imgproc.HOUGH_GRADIENT, 1.0,
@@ -116,21 +101,18 @@ public class brailleMain{
                 100.0, 30.0, 1 , 100); // change the last two parameters
                 // (min_radius & max_radius) to detect larger circles
                 circleCounter = circles.cols();
+                
+        Point [] pointArray = new Point[circleCounter];
         
         for (int x = 0; x < circles.cols(); x++) {
             double[] c = circles.get(0, x);
-            Point center = new Point(Math.round(c[0]), Math.round(c[1]));
-            // circle center
-            Imgproc.circle(image, center, 1, new Scalar(0,100,100), 3, 8, 0 );
-            // circle outline
+            Point center = new Point(Math.round(c[0]), Math.round(c[1]));// circle center
+            pointArray[x] = center;
+            Imgproc.circle(image, center, 1, new Scalar(0,100,100), 3, 8, 0 );// circle outline
             int radius = (int) Math.round(c[2]);
             Imgproc.circle(image, center, radius, new Scalar(255,0,255), 3, 8, 0 );
             radiusSum += 2*radius;
         }
-        
-
-        HighGui.imshow("detected circles", image);
-        HighGui.waitKey();
         
         meanDiameter = radiusSum/circleCounter;
         oneCharacterWithSpace = meanDiameter * 6 / 1.2;
@@ -138,6 +120,8 @@ public class brailleMain{
         
         lineSpace = meanDiameter * 2.3 / 1.2;
         rowSpace = meanDiameter * 2.5 / 1.2;
+        dotSize = meanDiameter * 1.2 / 1.2;
+        dotSpace = meanDiameter * 1.3 / 1.2;
         
         numberOfColumns = Math.round(w/oneCharacterWithSpace);
         numberOfRows = Math.round(h/oneCharacterWithNewLine);
@@ -149,30 +133,101 @@ public class brailleMain{
         System.out.println("Liczba wierszy: " + numberOfRows);  
         System.out.println("Liczba liter na obrazie: " + numberOfCharacters);
         
-
-        // KONIEC TESTOWANIA
+         int numOfCharacters = (int)numberOfCharacters;
+        String[] translatedText = new String[numOfCharacters];       
         
-<<<<<<< HEAD
+        String[] currCharacter = new String[6];
+        for (int i = 0; i < 6; i++){
+            currCharacter[i] = "0";
+        }
+        int currCharNumber = 0;
+        //do poprawienia
+        for (int currRow = 1; currRow < numberOfRows+1; currRow++) {
+            System.out.println("\nnumer wiersza:" +currRow);
+            for (int currCol = 1; currCol < numberOfColumns+1; currCol++){
+                for (int i = 0; i < 6; i++){
+                        currCharacter[i] = "0";
+                }
+                System.out.println("\nnumer kolumny:" +currCol);
+//                double abc;
+//                abc = (currCol-1)*oneCharacterWithSpace + dotSize + dotSpace;
+//                System.out.println("\nwymiar:" +abc);                
+                    for (int j = 0; j < circleCounter; j++){    
+                        
+                        if (pointArray[j].x < (currCol-1)*oneCharacterWithSpace + dotSize + dotSpace &&
+                            pointArray[j].x > (currCol-1)*oneCharacterWithSpace &&    
+                            pointArray[j].y < (currRow-1)*oneCharacterWithNewLine + dotSize + dotSpace && 
+                            pointArray[j].y > (currRow-1)*oneCharacterWithNewLine){
+                            currCharacter[0] = "1";                            
+                        }
+                        else if (pointArray[j].x < currCol*oneCharacterWithSpace && 
+                                 pointArray[j].x > ((currCol-1)*oneCharacterWithSpace) + dotSize + dotSpace && 
+                                 pointArray[j].y < (currRow-1)*oneCharacterWithNewLine + dotSize + dotSpace && 
+                                 pointArray[j].y > (currRow-1)*oneCharacterWithNewLine){
+                            currCharacter[1] = "1";                            
+                        }
+                        
+                        else if (pointArray[j].x < (currCol-1)*oneCharacterWithSpace + dotSize + dotSpace &&
+                                 pointArray[j].x > ((currCol-1)*oneCharacterWithSpace) && 
+                                 pointArray[j].y < (currRow-1)*oneCharacterWithNewLine + 2* (dotSize + dotSpace) &&
+                                 pointArray[j].y > (currRow-1)*oneCharacterWithNewLine + dotSize + dotSpace){
+                            currCharacter[2] = "1";
+                            
+                        }
+                        else if (pointArray[j].x < currCol*oneCharacterWithSpace && 
+                                 pointArray[j].x > ((currCol-1)*oneCharacterWithSpace) + dotSize + dotSpace &&
+                                 pointArray[j].y < (currRow-1)*oneCharacterWithNewLine + 2* (dotSize + dotSpace) &&
+                                 pointArray[j].y > (currRow-1)*oneCharacterWithNewLine + dotSize + dotSpace){
+                            currCharacter[3] = "1";
+                            
+                        }
+                        
+                        else if (pointArray[j].x < (currCol-1)*oneCharacterWithSpace + dotSize + dotSpace &&
+                                 pointArray[j].x > ((currCol-1)*oneCharacterWithSpace) &&
+                                 pointArray[j].y < (currRow*oneCharacterWithNewLine - rowSpace)&&
+                                 pointArray[j].y > (currRow-1)*oneCharacterWithNewLine + 2* (dotSize + dotSpace)){
+                            currCharacter[4] = "1";
+                            
+                        }
+                        else if (pointArray[j].x < currCol*oneCharacterWithSpace && 
+                                 pointArray[j].x > ((currCol-1)*oneCharacterWithSpace) + dotSize + dotSpace &&
+                                 pointArray[j].y < (currRow*oneCharacterWithNewLine - rowSpace) &&
+                                 pointArray[j].y > (currRow-1)*oneCharacterWithNewLine + 2* (dotSize + dotSpace)){
+                            currCharacter[5] = "1";
+                            
+                        }
+                    }                   
+//                    System.out.println("znak: ");
+//                    for (int i = 0; i < 6; i++){
+//                        System.out.print(currCharacter[i] + ", ");
+//                    }
+                    
+                    String currCode = String.join("", currCharacter);
+                    letter_translation(currCode, translatedText, currCharNumber);
+                    currCharNumber++;
+                    
+            }
+        }
+        // KONIEC POPRAWIANIA
+        
+        HighGui.imshow("detected circles", image);
+        HighGui.waitKey();
+
         //Saving edited image
         Imgcodecs.imwrite(destinationPath,imgEdited );
-        // Successful operation message
-        System.out.println("The photo was succesfully edited and saved to a new file! \nPath to the edited photo: " + destinationPath);
-           
-       
-=======
-        
-
-        //Saving edited image
-        Imgcodecs.imwrite(destinationPath,imgEdited );
         
         // Successful operation message
         System.out.println("The photo was succesfully edited and saved to a new file! \nPath to the edited photo: " + destinationPath);
+                 
+        System.out.println(translatedText);
+        
+        
         System.exit(0);
 
->>>>>>> 66788d5fcb6f30043995bd85d84ec514c7b11ed1
     }
     
         // METHODS
+    
         //image edition method
         static void image_edition(Mat img_Gray, Mat image) {
             System.out.println("The edition has started! I'm currently editing the image...");
@@ -190,11 +245,12 @@ public class brailleMain{
             Imgproc.threshold(img_Gray, img_Gray, 0, 255, Imgproc.THRESH_OTSU);
             //imagie edition message
             System.out.println("The editing is complete!");
-<<<<<<< HEAD
-        }  
-=======
-        }   
-       
 
->>>>>>> 66788d5fcb6f30043995bd85d84ec514c7b11ed1
+        }
+        
+        //do uzupełnienia
+        static void letter_translation(String currCode, String[] translatedText, int currCharNumber) {
+            translatedText[currCharNumber] = "hejka";
+            System.out.println("litera przetlumaczona ");
+        }
 }
