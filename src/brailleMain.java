@@ -53,23 +53,6 @@ public class brailleMain{
         }
         while(sourcePath==null);
 
-//        //initiating interface
-//       Runnable thread=new Runnable()
-//       {
-//           @Override
-//           public void run()
-//           {
-//                App_interface app = new App_interface();
-//                app.setVisible(true);
-//           }
-//       };
-//        SwingUtilities.invokeLater(thread);
-
-//        App_interface app = new App_interface();
-//        String sourcePath =app.getpath();
-        
-//        String sourcePath = "D:/obrazek.jpg";
-//>>>>>>> 66788d5fcb6f30043995bd85d84ec514c7b11ed1
 
         String destinationPath = "D:/obrazek-edited.jpg";
         

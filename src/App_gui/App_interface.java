@@ -55,6 +55,7 @@ public class App_interface extends JFrame
         public void actionPerformed(ActionEvent ae) {
             File file = fc.getSelectedFile();
             path = file.getAbsolutePath();
+            JOptionPane.showMessageDialog(null, "wybrano obraz");
         }
    };
     fc.addActionListener(action2);
