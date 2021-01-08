@@ -12,6 +12,8 @@ import org.opencv.core.Core;
 import java.io.IOException;
 
 import Dictionary.Letters;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
 
 import App_gui.App_interface;
 import javax.swing.SwingUtilities;
@@ -51,13 +53,13 @@ public class brailleMain{
         System.out.print("");  //czemu bez tego nie działa?
         }
         while(sourcePath==null);
-
+        
 
         String destinationPath = "D:/obrazek-edited.jpg";
         
         // Welcome message
         System.out.println("Welcome to Braille Translator! \nPath to the chosen photo: " + sourcePath);
-            System.out.println(Letters.numofletters);
+   
         // Loading the OpenCV native library
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         
@@ -179,23 +181,35 @@ public class brailleMain{
                             
                         }
                     }                   
-//                    System.out.println("znak: ");
-//                    for (int i = 0; i < 6; i++){
-//                        System.out.print(currCharacter[i] + ", ");
-//                    }
-//                    for (int i = 0; i < numOfCharacters; i++){
-//                        for (int j = 0; j < numofletters; j++){
-//                        currCharacter[1]
-//                                }
-//                    }
-                    String currCode = String.join("", currCharacter);
-                    letter_translation(currCode, translatedText, currCharNumber);
-                    currCharNumber++;
+                    System.out.println("znak: ");
+                    for (int i = 0; i < 6; i++){
+                        System.out.print(currCharacter[i] + ", ");
+                    }
+                    
+                    
                     
             }
         }
         // KONIEC POPRAWIANIA
         
+        //PORÓWNYWANIE ZNAKÓW I ZAPISYWANIE DO TXT, do zmiany currcharakter
+                    FileWriter file = new FileWriter("Translate.txt");
+                    BufferedWriter translate = new BufferedWriter(file);
+                    for (int i = 0; i < numOfCharacters; i++)
+                    {
+                        for (int j = 0; j < Letters.numofletters;j++)
+                        {
+                            if (currCharacter[i]==Letters.idletters[j])
+                            {
+                                translate.append(Letters.trueletters[j]);
+                            }
+                        }
+                    }
+                    //KONIEC
+                  
+                    String currCode = String.join("", currCharacter);
+                    letter_translation(currCode, translatedText, currCharNumber);
+                    currCharNumber++;
         HighGui.imshow("detected circles", image);
         HighGui.waitKey();
 
