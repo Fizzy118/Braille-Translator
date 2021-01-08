@@ -9,7 +9,7 @@ import javax.swing.*;
 import java.awt.event.*; 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
-//import javax.swing.filechooser.FileSystemView;
+import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -55,7 +55,7 @@ public class App_interface extends JFrame
         public void actionPerformed(ActionEvent ae) {
             File file = fc.getSelectedFile();
             path = file.getAbsolutePath();
-            JOptionPane.showMessageDialog(null, "wybrano obraz");
+            JOptionPane.showMessageDialog(null, "Wybrano obraz!");
         }
    };
     fc.addActionListener(action2);
@@ -110,21 +110,4 @@ public class App_interface extends JFrame
    {
    return path;
    }
-//   static void image_edition(Mat img_Gray, Mat image) {
-//            System.out.println("The edition has started! I'm currently editing the image...");
-//            //Grayscale
-//            Imgproc.cvtColor(image, img_Gray, Imgproc.COLOR_BGR2GRAY);
-//
-//            //Gaussian Filter
-//            Imgproc.GaussianBlur(img_Gray, img_Gray, new Size(3,3), 0);
-//            Imgproc.adaptiveThreshold(img_Gray, img_Gray, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY_INV, 5, 5);
-//            // Median Filter
-//            Imgproc.medianBlur(img_Gray, img_Gray, 3);
-//            Imgproc.threshold(img_Gray, img_Gray, 0, 255, Imgproc.THRESH_OTSU); 
-//            //Gaussian Filter
-//            Imgproc.GaussianBlur(img_Gray, img_Gray, new Size(3, 3), 0);
-//            Imgproc.threshold(img_Gray, img_Gray, 0, 255, Imgproc.THRESH_OTSU);
-//            //imagie edition message
-//            System.out.println("The editing is complete!");
-//        }
 }

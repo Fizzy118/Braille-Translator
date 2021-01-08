@@ -41,13 +41,12 @@ public class brailleMain{
 
     public static void main(String[] args)throws IOException{ 
         //initiating interface
-    
- 
         App_interface app = new App_interface();
         app.setVisible(true);
  
+        //Waiting loop
         String sourcePath;
-        do{
+        do{     //mozna uzyc nextline() 
         sourcePath =app.getpath();
         System.out.print("");  //czemu bez tego nie działa?
         }
@@ -58,7 +57,7 @@ public class brailleMain{
         
         // Welcome message
         System.out.println("Welcome to Braille Translator! \nPath to the chosen photo: " + sourcePath);
-            
+            System.out.println(Letters.numofletters);
         // Loading the OpenCV native library
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         
@@ -184,7 +183,11 @@ public class brailleMain{
 //                    for (int i = 0; i < 6; i++){
 //                        System.out.print(currCharacter[i] + ", ");
 //                    }
-                    
+//                    for (int i = 0; i < numOfCharacters; i++){
+//                        for (int j = 0; j < numofletters; j++){
+//                        currCharacter[1]
+//                                }
+//                    }
                     String currCode = String.join("", currCharacter);
                     letter_translation(currCode, translatedText, currCharNumber);
                     currCharNumber++;

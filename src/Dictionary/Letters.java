@@ -11,6 +11,7 @@
 package Dictionary;
 
 public class Letters {
+    public static int numofletters=52;
     public String[] da={"100000","a"};
     public String[] db={"101000","b"};
     public String[] dc={"110000","c"};
