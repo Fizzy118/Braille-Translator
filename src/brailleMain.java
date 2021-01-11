@@ -205,6 +205,7 @@ public class brailleMain{
                             }
                         }
                     }
+                    translate.close();
                     //KONIEC
                   
                     String currCode = String.join("", currCharacter);
