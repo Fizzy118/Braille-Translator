@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package App_gui;
 import java.awt.*;
 import javax.swing.*;
@@ -16,10 +11,10 @@ import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-
+import Main.brailleMain;
 /**
- *
- * @author piotr
+ * This is the code that provides graphic interface for "brailleMain" aplication
+ * @author Zuzanna Adamiuk & Piotr Kielak
  */
 public class App_interface extends JFrame
 {
@@ -61,11 +56,20 @@ public class App_interface extends JFrame
     fc.addActionListener(action2);
     
     
-    //buttons initiation
+    //button "translate" initiation
     JButton button1= new JButton("Translate");
     mainPanel.add(button1);
     button1.setSize(15,15); 
+    
+    ActionListener action3 = new ActionListener() {       
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+       //////////
+        }
+   };
+    fc.addActionListener(action3);
   
+    //button "info" initiation
     JButton button2= new JButton(new ImageIcon("C:\\Users\\piotr\\Desktop\\Braille-Trans\\Braille-Project\\src\\App_gui\\info.png"));
     mainPanel.add(button2);
     
@@ -78,10 +82,8 @@ public class App_interface extends JFrame
         }};
 
     button2.addActionListener(action1);
-    //Check box initiation
-    JCheckBox checkBox=new JCheckBox("save as .txt");  
-    mainPanel.add(checkBox);
     
+ 
     //setting title and size
     this.setTitle("Braille Translator");
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -92,7 +94,7 @@ public class App_interface extends JFrame
     GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
 
    hGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).
-            addComponent(label).addComponent(fc).addComponent(checkBox));
+            addComponent(label).addComponent(fc));
    hGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).
             addComponent(button2).addComponent(button1));
    layout.setHorizontalGroup(hGroup);
@@ -103,7 +105,7 @@ public class App_interface extends JFrame
             addComponent(label).addComponent(button2));
    vGroup.addGroup(layout.createParallelGroup().addComponent(fc));
    vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE).
-            addComponent(checkBox).addComponent(button1));
+           addComponent(button1));
    layout.setVerticalGroup(vGroup);
     }
    public String getpath() 

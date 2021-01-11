@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+package Main;
 
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
@@ -10,11 +6,11 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.core.Core;
 import java.io.IOException;
-
 import Dictionary.Letters;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
-
+import java.io.File; 
+import java.io.IOException;
 import App_gui.App_interface;
 import javax.swing.SwingUtilities;
 import java.awt.event.*; 
@@ -71,10 +67,56 @@ public class brailleMain{
         w = image.size().width;
         h = image.size().height;
         System.out.println("Image size: \nWidth: " + w + "px\nHeight: " + h +"px");
-    
+        
+        FileWriter file = new FileWriter("Translated.txt");
+        
         //Function call
         image_edition(imgEdited, image);
+        letter_translation(w, h, imgEdited, image, file);
+            
+                    
+        HighGui.imshow("detected circles", image); //do usuniecia na koniec?
+        HighGui.waitKey();
+
+        //Saving edited image
+        Imgcodecs.imwrite(destinationPath,imgEdited );//do usuniecia na koniec?
+        
+        // Successful operation message
+        System.out.println("The photo was succesfully edited and saved to a new file! \nPath to the edited photo: " + destinationPath);
+        System.exit(0);
+    
    
+    }
+        
+        // METHODS
+    
+        //image edition method
+        static void image_edition(Mat img_Gray, Mat image) {
+            System.out.println("The edition has started! I'm currently editing the image...");
+            //Grayscale
+            Imgproc.cvtColor(image, img_Gray, Imgproc.COLOR_BGR2GRAY);
+
+            //Gaussian Filter
+            Imgproc.GaussianBlur(img_Gray, img_Gray, new Size(3,3), 0);
+            Imgproc.adaptiveThreshold(img_Gray, img_Gray, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY_INV, 5, 5);
+            // Median Filter
+            Imgproc.medianBlur(img_Gray, img_Gray, 3);
+            Imgproc.threshold(img_Gray, img_Gray, 0, 255, Imgproc.THRESH_OTSU); 
+            //Gaussian Filter
+            Imgproc.GaussianBlur(img_Gray, img_Gray, new Size(3, 3), 0);
+            Imgproc.threshold(img_Gray, img_Gray, 0, 255, Imgproc.THRESH_OTSU);
+            //imagie edition message
+            System.out.println("The editing is complete!");
+
+        }
+        
+   
+        static void letter_translation(double w,double h,Mat imgEdited,Mat image,FileWriter file) throws IOException 
+        {
+  
+        //init writer
+        BufferedWriter translate = new BufferedWriter(file);
+        
         int circleCounter = 0;
         int radiusSum = 0;
         double meanDiameter, oneCharacterWithSpace,oneCharacterWithNewLine, numberOfColumns, numberOfRows, lineSpace, rowSpace, numberOfCharacters, dotSize, dotSpace;
@@ -118,8 +160,11 @@ public class brailleMain{
         System.out.println("Liczba liter na obrazie: " + numberOfCharacters);
         
          int numOfCharacters = (int)numberOfCharacters;
-        String[] translatedText = new String[numOfCharacters];       
+        String[] translatedText = new String[numOfCharacters];
+
+       
         
+
         String[] currCharacter = new String[6];
         for (int i = 0; i < 6; i++){
             currCharacter[i] = "0";
@@ -181,77 +226,27 @@ public class brailleMain{
                             
                         }
                     }                   
-                    System.out.println("znak: ");
-                    for (int i = 0; i < 6; i++){
-                        System.out.print(currCharacter[i] + ", ");
-                    }
-                    
-                    
-                    
-            }
-        }
-        // KONIEC POPRAWIANIA
+//                    System.out.println("znak: ");
+//                    for (int i = 0; i < 6; i++){
+//                        System.out.print(currCharacter[i] + ", ");
+//                    }
+                                      
+                    String currCode = String.join("", currCharacter);
+                    //letter_translation(currCode, translatedText, currCharNumber);
+                    currCharNumber++;
+                    System.out.println(currCode);
+                    // KONIEC POPRAWIANIA
         
-        //PORÓWNYWANIE ZNAKÓW I ZAPISYWANIE DO TXT, do zmiany currcharakter
-                    FileWriter file = new FileWriter("Translate.txt");
-                    BufferedWriter translate = new BufferedWriter(file);
-                    for (int i = 0; i < numOfCharacters; i++)
-                    {
-                        for (int j = 0; j < Letters.numofletters;j++)
+                    //PORÓWNYWANIE ZNAKÓW I ZAPISYWANIE DO TXT, do zmiany currcharakter
+                    for (int j = 0; j < Letters.numofletters;j++)
                         {
-                            if (currCharacter[i]==Letters.idletters[j])
+                            if (currCode.equals(Letters.idletters[j]))
                             {
                                 translate.append(Letters.trueletters[j]);
                             }
-                        }
-                    }
-                    translate.close();
-                    //KONIEC
-                  
-                    String currCode = String.join("", currCharacter);
-                    letter_translation(currCode, translatedText, currCharNumber);
-                    currCharNumber++;
-        HighGui.imshow("detected circles", image);
-        HighGui.waitKey();
-
-        //Saving edited image
-        Imgcodecs.imwrite(destinationPath,imgEdited );
-        
-        // Successful operation message
-        System.out.println("The photo was succesfully edited and saved to a new file! \nPath to the edited photo: " + destinationPath);
-                 
-        System.out.println(translatedText);
-        
-        
-        System.exit(0);
-
-    }
-    
-        // METHODS
-    
-        //image edition method
-        static void image_edition(Mat img_Gray, Mat image) {
-            System.out.println("The edition has started! I'm currently editing the image...");
-            //Grayscale
-            Imgproc.cvtColor(image, img_Gray, Imgproc.COLOR_BGR2GRAY);
-
-            //Gaussian Filter
-            Imgproc.GaussianBlur(img_Gray, img_Gray, new Size(3,3), 0);
-            Imgproc.adaptiveThreshold(img_Gray, img_Gray, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY_INV, 5, 5);
-            // Median Filter
-            Imgproc.medianBlur(img_Gray, img_Gray, 3);
-            Imgproc.threshold(img_Gray, img_Gray, 0, 255, Imgproc.THRESH_OTSU); 
-            //Gaussian Filter
-            Imgproc.GaussianBlur(img_Gray, img_Gray, new Size(3, 3), 0);
-            Imgproc.threshold(img_Gray, img_Gray, 0, 255, Imgproc.THRESH_OTSU);
-            //imagie edition message
-            System.out.println("The editing is complete!");
-
+                        }    
+            }
         }
-        
-        //do uzupełnienia
-        static void letter_translation(String currCode, String[] translatedText, int currCharNumber) {
-            translatedText[currCharNumber] = "hejka";
-            System.out.println("litera przetlumaczona ");
+        translate.close();            
         }
 }
