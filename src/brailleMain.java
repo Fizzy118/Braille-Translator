@@ -12,6 +12,8 @@ import org.opencv.core.Core;
 import java.io.IOException;
 
 import Dictionary.Letters;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
 
 import App_gui.App_interface;
 import javax.swing.SwingUtilities;
@@ -41,41 +43,23 @@ public class brailleMain{
 
     public static void main(String[] args)throws IOException{ 
         //initiating interface
-    
- 
         App_interface app = new App_interface();
         app.setVisible(true);
  
+        //Waiting loop
         String sourcePath;
-        do{
+        do{     //mozna uzyc nextline() 
         sourcePath =app.getpath();
         System.out.print("");  //czemu bez tego nie działa?
         }
         while(sourcePath==null);
-
-//        //initiating interface
-//       Runnable thread=new Runnable()
-//       {
-//           @Override
-//           public void run()
-//           {
-//                App_interface app = new App_interface();
-//                app.setVisible(true);
-//           }
-//       };
-//        SwingUtilities.invokeLater(thread);
-
-//        App_interface app = new App_interface();
-//        String sourcePath =app.getpath();
         
-//        String sourcePath = "D:/obrazek.jpg";
-//>>>>>>> 66788d5fcb6f30043995bd85d84ec514c7b11ed1
 
         String destinationPath = "D:/obrazek-edited.jpg";
         
         // Welcome message
         System.out.println("Welcome to Braille Translator! \nPath to the chosen photo: " + sourcePath);
-            
+   
         // Loading the OpenCV native library
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         
@@ -134,7 +118,9 @@ public class brailleMain{
         System.out.println("Liczba liter na obrazie: " + numberOfCharacters);
         
          int numOfCharacters = (int)numberOfCharacters;
-        String[] translatedText = new String[numOfCharacters];       
+        String[] translatedText = new String[numOfCharacters];
+        
+        FileWriter file = new FileWriter("Translate.txt");
         
         String[] currCharacter = new String[6];
         for (int i = 0; i < 6; i++){
@@ -201,15 +187,31 @@ public class brailleMain{
 //                    for (int i = 0; i < 6; i++){
 //                        System.out.print(currCharacter[i] + ", ");
 //                    }
-                    
+                                      
                     String currCode = String.join("", currCharacter);
-                    letter_translation(currCode, translatedText, currCharNumber);
+                    //letter_translation(currCode, translatedText, currCharNumber);
                     currCharNumber++;
+                    
+                    // KONIEC POPRAWIANIA
+        
+                    //PORÓWNYWANIE ZNAKÓW I ZAPISYWANIE DO TXT, do zmiany currcharakter
+
+                    BufferedWriter translate = new BufferedWriter(file);
+                    for (int j = 0; j < Letters.numofletters;j++)
+                        {
+                            if (currCode == Letters.idletters[j])
+                            {
+                                translate.append(Letters.trueletters[j]);
+                            }
+                        }
+                    //KONIEC
+
                     
             }
         }
-        // KONIEC POPRAWIANIA
         
+                    
+                    
         HighGui.imshow("detected circles", image);
         HighGui.waitKey();
 
