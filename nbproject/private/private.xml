@@ -3,9 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/C:/Users/piotr/Desktop/Braille-Trans/Braille-Project/src/Main/brailleMain.java</file>
             <file>file:/C:/Users/piotr/Desktop/Braille-Trans/Braille-Project/src/Dictionary/Letters.java</file>
             <file>file:/C:/Users/piotr/Desktop/Braille-Trans/Braille-Project/src/App_gui/App_interface.java</file>
+=======
+            <file>file:/C:/Users/zadam/Documents/NetBeansProjects/Braille-Translator/src/App_gui/App_interface.java</file>
+            <file>file:/C:/Users/zadam/Documents/NetBeansProjects/Braille-Translator/src/Dictionary/Letters.java</file>
+            <file>file:/C:/Users/zadam/Documents/NetBeansProjects/Braille-Translator/src/Main/brailleMain.java</file>
+>>>>>>> 89dfb3d039270a319d7751730fbd68c64edb1cd2
         </group>
     </open-files>
 </project-private>
