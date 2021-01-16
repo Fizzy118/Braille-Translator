@@ -14,7 +14,7 @@ import java.io.IOException;
 import App_gui.App_interface;
 import javax.swing.SwingUtilities;
 import java.awt.event.*; 
-
+import javax.swing.text.Document;
 //testowo
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
@@ -36,7 +36,8 @@ public class brailleMain{
      * 
      * @param args the command line arguments
      */  
-
+    static String finaltext;
+    static Mat image;
     public static void main(String[] args)throws IOException{ 
         //initiating interface
         App_interface app = new App_interface();
@@ -50,7 +51,6 @@ public class brailleMain{
         }
         while(sourcePath==null);
         
-
         String destinationPath = "D:/obrazek-edited.jpg";
         
         // Welcome message
@@ -58,37 +58,56 @@ public class brailleMain{
    
         // Loading the OpenCV native library
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        ///////////////////////////
         
         // Preparing matrix for changing an image
         Mat imgEdited = new Mat();
-        Mat image = Imgcodecs.imread(sourcePath, 1);  
+        image = Imgcodecs.imread(sourcePath, 1);  
 
         double w,h;
         w = image.size().width;
         h = image.size().height;
         System.out.println("Image size: \nWidth: " + w + "px\nHeight: " + h +"px");
         
-        FileWriter file = new FileWriter("Translated.txt");
         
-        //Function call
         image_edition(imgEdited, image);
-        //letter_translation(w, h, imgEdited, image, file);
-        letter_translation_by_minDist(w, h, imgEdited, image, file);
-        
-                    
-        HighGui.imshow("detected circles", image); //do usuniecia na koniec?
-        HighGui.waitKey();
+        //Function call
+        finaltext = letter_translation_by_minDist(w, h, imgEdited, image);
+        do{
+        System.out.println("");
+        }
+        while(app.gettrans()==false);           
+  //     HighGui.imshow("detected circles", image); //do usuniecia na koniec?
+      // HighGui.waitKey();
 
+
+        if(app.getbool()==true)
+        {
+            FileWriter file = new FileWriter("Translated.txt");
+            BufferedWriter translate = new BufferedWriter(file);
+            translate.append(finaltext);
+            translate.append(" ");
+            translate.close();
+            System.out.println("tlumacze");   
+        }
+       
         //Saving edited image
-        Imgcodecs.imwrite(destinationPath,imgEdited );//do usuniecia na koniec?
+    //    Imgcodecs.imwrite(destinationPath,imgEdited );//do usuniecia na koniec?
         
         // Successful operation message
         System.out.println("The photo was succesfully edited and saved to a new file! \nPath to the edited photo: " + destinationPath);
-        System.exit(0);
+        //System.exit(0);
     
    
     }
-        
+       public String gettext() 
+    {
+     return finaltext;
+    } 
+       public Mat getimage() 
+    {
+     return image;
+    } 
         // METHODS
     
         //image edition method
@@ -112,158 +131,161 @@ public class brailleMain{
         }
         
    
-        static void letter_translation(double w,double h,Mat imgEdited,Mat image,FileWriter file) throws IOException 
-        {
-            BufferedWriter translate = new BufferedWriter(file);
-
-            int circleCounter = 0;
-            int radiusSum = 0;
-            double meanDiameter, oneCharacterWithSpace,oneCharacterWithNewLine, numberOfColumns, numberOfRows, lineSpace, rowSpace, numberOfCharacters, dotSize, dotSpace,minDist;
-
-            Mat circles = new Mat();
-            Imgproc.HoughCircles(imgEdited, circles, Imgproc.HOUGH_GRADIENT, 1.0,
-                    10, // change this value to detect circles with different distances to each other
-                    100.0, 30.0, 1 , 100); // change the last two parameters (min_radius & max_radius) to detect larger circles
-                    circleCounter = circles.cols();
-
-            Point [] pointArray = new Point[circleCounter];
-
-            for (int x = 0; x < circles.cols(); x++) {
-                double[] c = circles.get(0, x);
-                Point center = new Point(Math.round(c[0]), Math.round(c[1]));// circle center
-                pointArray[x] = center;
-                Imgproc.circle(image, center, 1, new Scalar(0,100,100), 3, 8, 0 );// circle outline
-                int radius = (int) Math.round(c[2]);
-                Imgproc.circle(image, center, radius, new Scalar(255,0,255), 3, 8, 0 );
-                radiusSum += 2*radius;
-            }
-
-            meanDiameter = radiusSum/circleCounter;
-            
-            double x_dist, y_dist;
-            minDist = 150;
-            for (int i = 0; i < circleCounter; i++){
-                for (int j = 1; j < circleCounter-1; j++){
-                    if (i == j) {break;}
-                    else {
-                        x_dist = pointArray[i].x-pointArray[j].x;
-                        y_dist = pointArray[i].y-pointArray[j].y;
-                        if( Math.sqrt(x_dist*x_dist + y_dist*y_dist) < minDist){
-                            minDist = Math.sqrt(x_dist*x_dist + y_dist*y_dist);
-                        }
-                    }      
-                }
-            }
-            
-            oneCharacterWithSpace = meanDiameter * 6 / 1.2;
-            oneCharacterWithNewLine = meanDiameter * 10 / 1.2;
-            lineSpace = meanDiameter * 2.3 / 1.2;
-            rowSpace = meanDiameter * 2.5 / 1.2;
-            dotSize = meanDiameter * 1.2 / 1.2;
-            dotSpace = meanDiameter * 1.3 / 1.2;
-
-            numberOfColumns = Math.round(w/oneCharacterWithSpace);
-            numberOfRows = Math.round(h/oneCharacterWithNewLine);
-            numberOfCharacters = numberOfColumns * numberOfRows;
-
-            System.out.println("Liczba okręgów wynosi: " + circleCounter);     
-            System.out.println("Średni rozmiar średnicy to: " + meanDiameter + "px");
-            System.out.println("Liczba znaków w wierszu wynosi: " + numberOfColumns);   
-            System.out.println("Liczba wierszy: " + numberOfRows);  
-            System.out.println("Liczba liter na obrazie: " + numberOfCharacters);
-
-             int numOfCharacters = (int)numberOfCharacters;
-            String[] translatedText = new String[numOfCharacters];
-
-
-
-
-            String[] currCharacter = new String[6];
-            for (int i = 0; i < 6; i++){
-                currCharacter[i] = "0";
-            }
-            int currCharNumber = 0;
-            //do poprawienia
-            for (int currRow = 1; currRow < numberOfRows+1; currRow++) {
-                System.out.println("numer wiersza:" +currRow);
-                for (int currCol = 1; currCol < numberOfColumns+1; currCol++){
-                    for (int i = 0; i < 6; i++){
-                            currCharacter[i] = "0";
-                    }
-                    System.out.println("numer kolumny:" +currCol);
-    //                double abc;
-    //                abc = (currCol-1)*oneCharacterWithSpace + dotSize + dotSpace;
-    //                System.out.println("\nwymiar:" +abc);                
-                        for (int j = 0; j < circleCounter; j++){    
-
-                            if (pointArray[j].x < (currCol-1)*oneCharacterWithSpace + dotSize + dotSpace &&
-                                pointArray[j].x > (currCol-1)*oneCharacterWithSpace &&    
-                                pointArray[j].y < (currRow-1)*oneCharacterWithNewLine + dotSize + dotSpace && 
-                                pointArray[j].y > (currRow-1)*oneCharacterWithNewLine){
-                                currCharacter[0] = "1";                            
-                            }
-                            else if (pointArray[j].x < currCol*oneCharacterWithSpace && 
-                                     pointArray[j].x > ((currCol-1)*oneCharacterWithSpace) + dotSize + dotSpace && 
-                                     pointArray[j].y < (currRow-1)*oneCharacterWithNewLine + dotSize + dotSpace && 
-                                     pointArray[j].y > (currRow-1)*oneCharacterWithNewLine){
-                                currCharacter[1] = "1";                            
-                            }
-
-                            else if (pointArray[j].x < (currCol-1)*oneCharacterWithSpace + dotSize + dotSpace &&
-                                     pointArray[j].x > ((currCol-1)*oneCharacterWithSpace) && 
-                                     pointArray[j].y < (currRow-1)*oneCharacterWithNewLine + 2* (dotSize + dotSpace) &&
-                                     pointArray[j].y > (currRow-1)*oneCharacterWithNewLine + dotSize + dotSpace){
-                                currCharacter[2] = "1";
-
-                            }
-                            else if (pointArray[j].x < currCol*oneCharacterWithSpace && 
-                                     pointArray[j].x > ((currCol-1)*oneCharacterWithSpace) + dotSize + dotSpace &&
-                                     pointArray[j].y < (currRow-1)*oneCharacterWithNewLine + 2* (dotSize + dotSpace) &&
-                                     pointArray[j].y > (currRow-1)*oneCharacterWithNewLine + dotSize + dotSpace){
-                                currCharacter[3] = "1";
-
-                            }
-
-                            else if (pointArray[j].x < (currCol-1)*oneCharacterWithSpace + dotSize + dotSpace &&
-                                     pointArray[j].x > ((currCol-1)*oneCharacterWithSpace) &&
-                                     pointArray[j].y < (currRow*oneCharacterWithNewLine - rowSpace)&&
-                                     pointArray[j].y > (currRow-1)*oneCharacterWithNewLine + 2* (dotSize + dotSpace)){
-                                currCharacter[4] = "1";
-
-                            }
-                            else if (pointArray[j].x < currCol*oneCharacterWithSpace && 
-                                     pointArray[j].x > ((currCol-1)*oneCharacterWithSpace) + dotSize + dotSpace &&
-                                     pointArray[j].y < (currRow*oneCharacterWithNewLine - rowSpace) &&
-                                     pointArray[j].y > (currRow-1)*oneCharacterWithNewLine + 2* (dotSize + dotSpace)){
-                                currCharacter[5] = "1";
-
-                            }
-                        }                   
-
-                        String currCode = String.join("", currCharacter);
-                        currCharNumber++;
-                        System.out.println(currCode);
-
-                        //PORÓWNYWANIE ZNAKÓW I ZAPISYWANIE DO TXT, do zmiany currcharakter
-                        for (int j = 0; j < Letters.numofletters; j++){
-                            if (currCode.equals(Letters.idletters[j])){
-                                translate.append(Letters.trueletters[j]);
-                                                        System.out.println("tlumacze");
-                            }
-                        }
-
-                }
-                translate.append(" ");
-            }
-            translate.close();            
-        }
+//        static void letter_translation(double w,double h,Mat imgEdited,Mat image,FileWriter file) throws IOException 
+//        {
+//            
+//            BufferedWriter translate = new BufferedWriter(file);
+//
+//            int circleCounter = 0;
+//            int radiusSum = 0;
+//            double meanDiameter, oneCharacterWithSpace,oneCharacterWithNewLine, numberOfColumns, numberOfRows, lineSpace, rowSpace, numberOfCharacters, dotSize, dotSpace,minDist;
+//
+//            Mat circles = new Mat();
+//            Imgproc.HoughCircles(imgEdited, circles, Imgproc.HOUGH_GRADIENT, 1.0,
+//                    10, // change this value to detect circles with different distances to each other
+//                    100.0, 30.0, 1 , 100); // change the last two parameters (min_radius & max_radius) to detect larger circles
+//                    circleCounter = circles.cols();
+//
+//            Point [] pointArray = new Point[circleCounter];
+//
+//            for (int x = 0; x < circles.cols(); x++) {
+//                double[] c = circles.get(0, x);
+//                Point center = new Point(Math.round(c[0]), Math.round(c[1]));// circle center
+//                pointArray[x] = center;
+//                Imgproc.circle(image, center, 1, new Scalar(0,100,100), 3, 8, 0 );// circle outline
+//                int radius = (int) Math.round(c[2]);
+//                Imgproc.circle(image, center, radius, new Scalar(255,0,255), 3, 8, 0 );
+//                radiusSum += 2*radius;
+//            }
+//
+//            meanDiameter = radiusSum/circleCounter;
+//            
+//            double x_dist, y_dist;
+//            minDist = 150;
+//            for (int i = 0; i < circleCounter; i++){
+//                for (int j = 1; j < circleCounter-1; j++){
+//                    if (i == j) {break;}
+//                    else {
+//                        x_dist = pointArray[i].x-pointArray[j].x;
+//                        y_dist = pointArray[i].y-pointArray[j].y;
+//                        if( Math.sqrt(x_dist*x_dist + y_dist*y_dist) < minDist){
+//                            minDist = Math.sqrt(x_dist*x_dist + y_dist*y_dist);
+//                        }
+//                    }      
+//                }
+//            }
+//            
+//            oneCharacterWithSpace = meanDiameter * 6 / 1.2;
+//            oneCharacterWithNewLine = meanDiameter * 10 / 1.2;
+//            lineSpace = meanDiameter * 2.3 / 1.2;
+//            rowSpace = meanDiameter * 2.5 / 1.2;
+//            dotSize = meanDiameter * 1.2 / 1.2;
+//            dotSpace = meanDiameter * 1.3 / 1.2;
+//
+//            numberOfColumns = Math.round(w/oneCharacterWithSpace);
+//            numberOfRows = Math.round(h/oneCharacterWithNewLine);
+//            numberOfCharacters = numberOfColumns * numberOfRows;
+//
+//            System.out.println("Liczba okręgów wynosi: " + circleCounter);     
+//            System.out.println("Średni rozmiar średnicy to: " + meanDiameter + "px");
+//            System.out.println("Liczba znaków w wierszu wynosi: " + numberOfColumns);   
+//            System.out.println("Liczba wierszy: " + numberOfRows);  
+//            System.out.println("Liczba liter na obrazie: " + numberOfCharacters);
+//
+//             int numOfCharacters = (int)numberOfCharacters;
+//            String[] translatedText = new String[numOfCharacters];
+//
+//
+//
+//
+//            String[] currCharacter = new String[6];
+//            for (int i = 0; i < 6; i++){
+//                currCharacter[i] = "0";
+//            }
+//            int currCharNumber = 0;
+//            //do poprawienia
+//            for (int currRow = 1; currRow < numberOfRows+1; currRow++) {
+//                System.out.println("numer wiersza:" +currRow);
+//                for (int currCol = 1; currCol < numberOfColumns+1; currCol++){
+//                    for (int i = 0; i < 6; i++){
+//                            currCharacter[i] = "0";
+//                    }
+//                    System.out.println("numer kolumny:" +currCol);
+//    //                double abc;
+//    //                abc = (currCol-1)*oneCharacterWithSpace + dotSize + dotSpace;
+//    //                System.out.println("\nwymiar:" +abc);                
+//                        for (int j = 0; j < circleCounter; j++){    
+//
+//                            if (pointArray[j].x < (currCol-1)*oneCharacterWithSpace + dotSize + dotSpace &&
+//                                pointArray[j].x > (currCol-1)*oneCharacterWithSpace &&    
+//                                pointArray[j].y < (currRow-1)*oneCharacterWithNewLine + dotSize + dotSpace && 
+//                                pointArray[j].y > (currRow-1)*oneCharacterWithNewLine){
+//                                currCharacter[0] = "1";                            
+//                            }
+//                            else if (pointArray[j].x < currCol*oneCharacterWithSpace && 
+//                                     pointArray[j].x > ((currCol-1)*oneCharacterWithSpace) + dotSize + dotSpace && 
+//                                     pointArray[j].y < (currRow-1)*oneCharacterWithNewLine + dotSize + dotSpace && 
+//                                     pointArray[j].y > (currRow-1)*oneCharacterWithNewLine){
+//                                currCharacter[1] = "1";                            
+//                            }
+//
+//                            else if (pointArray[j].x < (currCol-1)*oneCharacterWithSpace + dotSize + dotSpace &&
+//                                     pointArray[j].x > ((currCol-1)*oneCharacterWithSpace) && 
+//                                     pointArray[j].y < (currRow-1)*oneCharacterWithNewLine + 2* (dotSize + dotSpace) &&
+//                                     pointArray[j].y > (currRow-1)*oneCharacterWithNewLine + dotSize + dotSpace){
+//                                currCharacter[2] = "1";
+//
+//                            }
+//                            else if (pointArray[j].x < currCol*oneCharacterWithSpace && 
+//                                     pointArray[j].x > ((currCol-1)*oneCharacterWithSpace) + dotSize + dotSpace &&
+//                                     pointArray[j].y < (currRow-1)*oneCharacterWithNewLine + 2* (dotSize + dotSpace) &&
+//                                     pointArray[j].y > (currRow-1)*oneCharacterWithNewLine + dotSize + dotSpace){
+//                                currCharacter[3] = "1";
+//
+//                            }
+//
+//                            else if (pointArray[j].x < (currCol-1)*oneCharacterWithSpace + dotSize + dotSpace &&
+//                                     pointArray[j].x > ((currCol-1)*oneCharacterWithSpace) &&
+//                                     pointArray[j].y < (currRow*oneCharacterWithNewLine - rowSpace)&&
+//                                     pointArray[j].y > (currRow-1)*oneCharacterWithNewLine + 2* (dotSize + dotSpace)){
+//                                currCharacter[4] = "1";
+//
+//                            }
+//                            else if (pointArray[j].x < currCol*oneCharacterWithSpace && 
+//                                     pointArray[j].x > ((currCol-1)*oneCharacterWithSpace) + dotSize + dotSpace &&
+//                                     pointArray[j].y < (currRow*oneCharacterWithNewLine - rowSpace) &&
+//                                     pointArray[j].y > (currRow-1)*oneCharacterWithNewLine + 2* (dotSize + dotSpace)){
+//                                currCharacter[5] = "1";
+//
+//                            }
+//                        }                   
+//
+//                        String currCode = String.join("", currCharacter);
+//                        currCharNumber++;
+//                        System.out.println(currCode);
+//
+//                        
+//                        //PORÓWNYWANIE ZNAKÓW I ZAPISYWANIE DO TXT, do zmiany currcharakter
+//                        for (int j = 0; j < Letters.numofletters; j++){
+//                            if (currCode.equals(Letters.idletters[j])){
+//                                translate.append(Letters.trueletters[j]);
+//                                                        System.out.println("tlumacze");
+//                            }
+//                        }
+//
+//                }
+//                translate.append(" ");
+//            }
+//            translate.close();            
+//        }
 
 ////////////////////////////////////////// testowanie
-
-static void letter_translation_by_minDist(double w,double h,Mat imgEdited,Mat image,FileWriter file) throws IOException 
+    
+static  String letter_translation_by_minDist(double w,double h,Mat imgEdited,Mat image) throws IOException 
         {
-            BufferedWriter translate = new BufferedWriter(file);
-
+            
+            //BufferedWriter translate = new BufferedWriter(file);
+            
             int circleCounter = 0;
             int radiusSum = 0;
             double meanDiameter, oneCharacterWithSpace,oneCharacterWithNewLine, numberOfColumns, numberOfRows, lineSpace, rowSpace, numberOfCharacters, dotSize, dotSpace,minDist;
@@ -322,8 +344,8 @@ static void letter_translation_by_minDist(double w,double h,Mat imgEdited,Mat im
             System.out.println("Liczba liter na obrazie: " + numberOfCharacters);
 
             int numOfCharacters = (int)numberOfCharacters;
-            String[] translatedText = new String[numOfCharacters];
-
+            
+            String translated_text="";
             String[] currCharacter = new String[6];
             for (int i = 0; i < 6; i++){
                 currCharacter[i] = "0";
@@ -395,17 +417,27 @@ static void letter_translation_by_minDist(double w,double h,Mat imgEdited,Mat im
                         System.out.println(currCode);
 
                         //PORÓWNYWANIE ZNAKÓW I ZAPISYWANIE DO TXT, do zmiany currcharakter
-                        for (int j = 0; j < Letters.numofletters; j++){
-                            if (currCode.equals(Letters.idletters[j])){
-                                translate.append(Letters.trueletters[j]);
-                                System.out.println("tlumacze");
+//                        if(app.getbool()){
+//                        for (int j = 0; j < Letters.numofletters; j++){
+//                            if (currCode.equals(Letters.idletters[j])){
+//                                translate.append(Letters.trueletters[j]);
+//                                System.out.println("tlumacze");
+//                                break;
+//                            }
+//                        }
+//                        }
+                        for (int p = 0; p < Letters.numofletters; p++){
+                            if (currCode.equals(Letters.idletters[p])){
+                                translated_text =translated_text + Letters.trueletters[p];
+                                
                                 break;
                             }
                         }
-
+                        
                 }
-                translate.append(" ");
+                //translate.append(" ");
             }
-            translate.close();            
+           // translate.close();  
+            return translated_text;
         }
 }
