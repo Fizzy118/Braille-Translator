@@ -174,12 +174,7 @@ public class App_interface extends JFrame
    {
    return translate;
    }
-   //checkbox
-//   public void actionPerformed(ItemEvent  e)
-//    {  
-//        if(e.getSource()==checkBox)  
-//        save_file = true; 
-//    }   
+   //checkbox item listener  
 class CustomItemListener implements ItemListener {
       public void itemStateChanged(ItemEvent e) {
          if(e.getSource()==checkBox)  

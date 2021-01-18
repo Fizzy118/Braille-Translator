@@ -435,6 +435,7 @@ static  String letter_translation_by_minDist(double w,double h,Mat imgEdited,Mat
                         }
                         
                 }
+                translated_text =translated_text + " ";
                 //translate.append(" ");
             }
            // translate.close();  

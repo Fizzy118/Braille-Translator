@@ -5,7 +5,7 @@
  */
 
 /**
- *This is a Dictionary that provides unnecessary letters
+ *This is a Dictionary that provides letters
  * @author Zuzanna Adamiuk & Piotr Kielak
  */
 package Dictionary;
