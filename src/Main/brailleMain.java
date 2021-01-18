@@ -42,7 +42,10 @@ public class brailleMain{
         //initiating interface
         App_interface app = new App_interface();
         app.setVisible(true);
- 
+        //endless program 
+        boolean done = false;
+        do
+        {
         //Waiting loop
         String sourcePath;
         do{     //mozna uzyc nextline() 
@@ -80,7 +83,7 @@ public class brailleMain{
   //     HighGui.imshow("detected circles", image); //do usuniecia na koniec?
       // HighGui.waitKey();
 
-
+        //Saving edited image
         if(app.getbool()==true)
         {
             FileWriter file = new FileWriter("Translated.txt");
@@ -88,16 +91,18 @@ public class brailleMain{
             translate.append(finaltext);
             translate.append(" ");
             translate.close();
-            System.out.println("tlumacze");   
+            System.out.println("Saving to txt");   
         }
        
-        //Saving edited image
+        
     //    Imgcodecs.imwrite(destinationPath,imgEdited );//do usuniecia na koniec?
         
         // Successful operation message
         System.out.println("The photo was succesfully edited and saved to a new file! \nPath to the edited photo: " + destinationPath);
         //System.exit(0);
-    
+        
+    }
+        while(!done);
    
     }
        public String gettext() 

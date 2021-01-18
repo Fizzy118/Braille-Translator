@@ -105,6 +105,7 @@ public class App_interface extends JFrame
                 mydialog.setVisible(true);
                // HighGui.imshow("detected circles", main.getimage()); //do usuniecia na koniec?
                 //HighGui.waitKey();
+                path=null;
             }
             else
             { 
