@@ -124,7 +124,6 @@ public class brailleMain{
 
      /** Method translating text written in Braille Alphabet using proportions based on 
        minimal distance between two closest detected circles.
-       The method works a bit better than method letter_translation_by_meanDiameter.
      * @param w edited image width
      * @param h edited image height
      * @param imgEdited edited image matrix
