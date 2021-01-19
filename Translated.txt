@@ -1,1 +1,9 @@
-welcome to our braille translator app        
+Number of circles: 37
+Mean diameter size: 22.0px
+Distance between two closest circles' centres: 47.0px
+Number of characters in a row: 5.0
+Number of rows: 3.0
+Maximal number of chracters in the picture: 15.0
+
+Text from your image means: 
+hello pjava is ok  
