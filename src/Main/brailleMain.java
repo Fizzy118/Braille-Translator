@@ -69,8 +69,8 @@ public class brailleMain{
             } while(app.getTranslation()==false); 
             
             // Display window with detected circles
-            // HighGui.imshow("detected circles", image); 
-            // HighGui.waitKey();
+            //HighGui.imshow("detected circles", image); 
+            //HighGui.waitKey();
             
             if(app.getSave()==true){
                 FileWriter file = new FileWriter("Translated.txt");
@@ -138,11 +138,12 @@ public class brailleMain{
         double meanDiameter, oneCharacterWithSpace,oneCharacterWithNewLine, numberOfColumns, numberOfRows, lineSpace, rowSpace, numberOfCharacters, dotSize, dotSpace,minDist;
         String translated_text="";
         
-        // We are using HoughCircles method from OpenCV lib, which allows us to detect
-        // circles in edited image matrix
+        // We are using HoughCircles method from OpenCV lib, which allows 
+        // us to detect circles in edited image matrix
          Mat circles = new Mat();
         Imgproc.HoughCircles(imgEdited, circles, Imgproc.HOUGH_GRADIENT, 1.0,
-            10, // value allowing to detect circles close to each other (the lower it is, the closer circles can be detected)
+            10, // value allowing to detect circles close to each other 
+                // (the lower it is, the closer circles can be detected)
             100.0, 30.0, 
             1 , // minimal radius to detect
             100); // maximal radius to detect
@@ -227,36 +228,29 @@ public class brailleMain{
                              pointArray[j].y > (currRow-1)*oneCharacterWithNewLine){
                         currCharacter[1] = "1";                            
                     }
-
                     else if (pointArray[j].x < (currCol-1)*oneCharacterWithSpace + minDist &&
                              pointArray[j].x > ((currCol-1)*oneCharacterWithSpace) && 
                              pointArray[j].y < (currRow-1)*oneCharacterWithNewLine + 2*minDist &&
                              pointArray[j].y > (currRow-1)*oneCharacterWithNewLine + minDist){
                         currCharacter[2] = "1";
-
                     }
                     else if (pointArray[j].x < currCol*oneCharacterWithSpace && 
                              pointArray[j].x > ((currCol-1)*oneCharacterWithSpace) + minDist &&
                              pointArray[j].y < (currRow-1)*oneCharacterWithNewLine + 2* (minDist) &&
                              pointArray[j].y > (currRow-1)*oneCharacterWithNewLine + minDist){
                         currCharacter[3] = "1";
-
                     }
-
                     else if (pointArray[j].x < (currCol-1)*oneCharacterWithSpace + minDist &&
                              pointArray[j].x > ((currCol-1)*oneCharacterWithSpace) &&
                              pointArray[j].y < (currRow*oneCharacterWithNewLine - rowSpace)&&
                              pointArray[j].y > (currRow-1)*oneCharacterWithNewLine + 2* (minDist)){
                         currCharacter[4] = "1";
-
                     }
                     else if (pointArray[j].x < currCol*oneCharacterWithSpace && 
                              pointArray[j].x > ((currCol-1)*oneCharacterWithSpace) + minDist &&
                              pointArray[j].y < (currRow*oneCharacterWithNewLine - rowSpace) &&
                              pointArray[j].y > (currRow-1)*oneCharacterWithNewLine + 2* (minDist)){
                         currCharacter[5] = "1";
-
-
                     }
                 }                   
 
