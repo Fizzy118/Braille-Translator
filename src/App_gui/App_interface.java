@@ -33,7 +33,7 @@ public class App_interface extends JFrame
         mainPanel.setPreferredSize(new Dimension(750,550));
         mainPanel.setLayout(layout);
         this.getContentPane().add(mainPanel);
-
+        this.setLocationRelativeTo( null );
         brailleMain main = new brailleMain();
 
         JLabel label=new JLabel("Choose image with text written in Braille:");
@@ -68,6 +68,7 @@ public class App_interface extends JFrame
                 if (path!=null) {
                     translate=true;
                     JDialog mydialog = new JDialog();
+                    mydialog.setLocationRelativeTo( null );
                     mydialog.setSize(new Dimension(700,600));
                     mydialog.setTitle("Translated text");
                     mydialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL); // prevent user from doing something else
