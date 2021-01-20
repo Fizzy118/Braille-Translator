@@ -43,7 +43,8 @@ public class App_interface extends JFrame
         mainPanel.add(fc);
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fc.setAcceptAllFileFilterUsed(false);
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("PNG and JPG images", "png", "jpg");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("PNG "
+            + "and JPG images", "png", "jpg");
         fc.addChoosableFileFilter(filter);
 
         ActionListener actionChooseFile = new ActionListener() {       
@@ -51,7 +52,8 @@ public class App_interface extends JFrame
             public void actionPerformed(ActionEvent ae) {
                 File file = fc.getSelectedFile();
                 path = file.getAbsolutePath();
-                JOptionPane.showMessageDialog(null, "The image was successfully chosen!");
+                JOptionPane.showMessageDialog(null, 
+                "The image was successfully chosen!");
             }
         };
         fc.addActionListener(actionChooseFile);
@@ -77,7 +79,7 @@ public class App_interface extends JFrame
                     area.setBounds(10,30, 200,200);  
                     mydialog.add(area);  
                     mydialog.setVisible(true);
-                    // HighGui.imshow("detected circles", main.getImage()); //do usuniecia na koniec?
+                    //HighGui.imshow("detected circles", main.getImage()); //do usuniecia na koniec?
                     //HighGui.waitKey();
                     path=null;
                 } else { 
