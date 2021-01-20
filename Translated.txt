@@ -1,9 +1,9 @@
-Number of circles: 55
-Mean diameter size: 31.0px
-Distance between two closest circles' centres: 66.0px
-Number of characters in a row: 10.0
-Number of rows: 2.0
-Maximal number of chracters in the picture: 20.0
+Number of circles: 37
+Mean diameter size: 22.0px
+Distance between two closest circles' centres: 47.0px
+Number of characters in a row: 5.0
+Number of rows: 3.0
+Maximal number of chracters in the picture: 15.0
 
 Text from your image means: 
-thanks for attention  
+hello pjava is ok  
